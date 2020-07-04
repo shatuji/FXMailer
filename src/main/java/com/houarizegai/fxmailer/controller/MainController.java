@@ -6,8 +6,10 @@ import com.houarizegai.fxmailer.App;
 import com.houarizegai.fxmailer.engine.EmailEngine;
 import com.houarizegai.fxmailer.engine.TemplateBuilder;
 import com.houarizegai.fxmailer.model.Receiver;
+import com.houarizegai.fxmailer.util.GenerateKeys;
 import com.jfoenix.controls.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -16,7 +18,10 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -54,7 +59,19 @@ public class MainController implements Initializable {
 
     private File headerImg;
 
+    /***
+     * attach file path
+     */
+    private File attachFile;
+    /***
+     * attach file name
+     */
+    @FXML
+    private Label lblAttachame;
+
     private FileChooser imgChooser;
+
+    private FileChooser attachFileChooser;
 
     private String htmlTemplate;
 
@@ -84,6 +101,11 @@ public class MainController implements Initializable {
         imgChooser = new FileChooser();
         FileChooser.ExtensionFilter imgChooserExtension = new FileChooser.ExtensionFilter("Image", "*.png", "*.jpg", "*.jpeg", "*.gif");
         imgChooser.getExtensionFilters().add(imgChooserExtension);
+
+        //init file chooser
+        attachFileChooser = new FileChooser();
+        FileChooser.ExtensionFilter fileChooserExtension = new FileChooser.ExtensionFilter("Attach", "*.txt", "*.zip", "*.tar");
+        attachFileChooser.getExtensionFilters().add(fileChooserExtension);
     }
 
     @FXML
@@ -134,7 +156,8 @@ public class MainController implements Initializable {
 
                     // init email engine
                     emailEngine.setContent(templateBuilder.build())
-                            .setHeaderImage(headerImg.getPath());
+                            .setHeaderImage(headerImg.getPath())
+                            .setAttachFile("KeyPair/publicKey");
 
                     boolean isSent = emailEngine.send(receiver.getEmail());
                     numberOfSent++;
@@ -173,4 +196,23 @@ public class MainController implements Initializable {
         stackSendingContainer.setVisible(false);
     }
 
+    /***
+     * 获得附件地址
+     */
+    @FXML
+    public void onLoadAttach() {
+        //generate key
+        GenerateKeys gk;
+        try {
+            gk = new GenerateKeys(1024);
+            gk.createKeys();
+            gk.writeToFile("KeyPair/publicKey", gk.getPublicKey().getEncoded());
+            gk.writeToFile("KeyPair/privateKey", gk.getPrivateKey().getEncoded());
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        lblAttachame.setText("publicKey");
+    }
 }

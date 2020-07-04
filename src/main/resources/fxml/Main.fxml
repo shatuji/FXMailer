@@ -118,6 +118,18 @@
                                  </VBox.margin>
                               </JFXTextArea>
                            </children>
+                           <!--attach-->
+                           <children>
+                              <Label styleClass="txt" text="Attach:" />
+                              <JFXButton onAction="#onLoadAttach" text="生成加密对">
+                                 <styleClass>
+                                    <String fx:value="btn" />
+                                    <String fx:value="btn-warning" />
+                                    <String fx:value="btn-load" />
+                                 </styleClass>
+                              </JFXButton>
+                              <Label fx:id="lblAttachame" styleClass="txt" text="" />
+                           </children>
                         </VBox>
                         <StackPane>
                            <children>

@@ -1,6 +1,8 @@
 package com.houarizegai.fxmailer.engine;
 
-import javafx.application.Platform;
+
+
+import com.houarizegai.fxmailer.util.Tools;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -10,11 +12,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.print.attribute.standard.PDLOverrideSupported;
 import java.util.Properties;
-import java.util.concurrent.Semaphore;
+
 
 public class EmailEngine {
-    private Properties props;
+
     private Session session;
     private Message message;
 
@@ -22,17 +25,12 @@ public class EmailEngine {
     private BodyPart messageBodyPart;
 
     public EmailEngine() {
-        props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
         // This mail has 2 part, the BODY and the embedded image
         multipart = new MimeMultipart("related");
     }
 
     public EmailEngine setAuth(String email, String password) {
+        Properties props = Tools.getProperties(email);
         session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
@@ -78,6 +76,11 @@ public class EmailEngine {
         return this;
     }
 
+    /***
+     * send images for head
+     * @param path
+     * @return
+     */
     public EmailEngine setHeaderImage(String path) {
         // second part (the image)
         messageBodyPart = new MimeBodyPart();
@@ -92,7 +95,23 @@ public class EmailEngine {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        return this;
+    }
 
+    public EmailEngine setAttachFile(String path){
+        // second part (the image)
+        messageBodyPart = new MimeBodyPart();
+        DataSource fds = new FileDataSource(path);
+
+        try {
+            messageBodyPart.setDataHandler(new DataHandler(fds));
+            messageBodyPart.setFileName("附件");
+
+            // add image to the multipart
+            multipart.addBodyPart(messageBodyPart);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 
