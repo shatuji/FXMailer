@@ -17,7 +17,7 @@
 
 <VBox spacing="10.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.houarizegai.fxmailer.controller.MainController">
    <children>
-      <Label styleClass="title" text="FX Mailer" />
+      <Label styleClass="title" text="Email加密" />
       <StackPane>
          <children>
             <HBox alignment="TOP_CENTER" spacing="10.0">

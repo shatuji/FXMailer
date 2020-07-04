@@ -24,16 +24,19 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXTextField fieldSubject, fieldSenderEmail;
+
     @FXML
     private JFXPasswordField fieldSenderPassword;
 
     @FXML
     private JFXComboBox<String> comboRecevicesFormatType;
+
     @FXML
     private JFXTextArea areaTo;
 
     @FXML
     private JFXTextField fieldHeaderTitle;
+
     @FXML
     private Label lblHeaderImgName;
 
@@ -42,6 +45,7 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXTextField fieldFooterAbout;
+
     @FXML
     private JFXTextArea areaFooterContact;
 

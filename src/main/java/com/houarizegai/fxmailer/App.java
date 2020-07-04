@@ -20,7 +20,7 @@ public class App extends Application {
         }
 
         this.stage = stage;
-        stage.setTitle("FX Mailer");
+        stage.setTitle("Eamil加密");
         stage.show();
     }
 
